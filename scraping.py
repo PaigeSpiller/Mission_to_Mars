@@ -121,10 +121,12 @@ def mars_image(browser):
             hemisphere_image_urls.append(hemisphere)
             browser.back()
 
+        return hemisphere_image_urls
+
     except AttributeError:
         return None   
 
-    return hemisphere_image_urls
+        
 
 if __name__ == "__main__":
 
