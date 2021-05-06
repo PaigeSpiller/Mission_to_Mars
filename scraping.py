@@ -19,7 +19,8 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
-        "last_modified": dt.datetime.now()
+        "last_modified": dt.datetime.now(),
+        "mars_image":mars_image(browser)
     }
 
     # Stop webdriver and return data
@@ -99,6 +100,31 @@ def mars_facts():
     
     # Convert dataframe into HTML format, add bootstrap
     return df.to_html(classes="table table-striped")
+
+def mars_image(browser):
+
+    try:
+        url = 'https://marshemispheres.com/'
+        browser.visit(url)
+        hemisphere_image_urls = []
+        links = browser.find_by_css('a.product-item img')
+        
+        html = browser.html
+        img_soup = soup(html, 'html.parser')
+
+        for i in range(len(links)):
+            hemisphere = {}
+            browser.find_by_css('a.product-item img')[i].click()
+            mars_img = browser.links.find_by_text('Sample').first
+            hemisphere['img_url'] = mars_img['href']
+            hemisphere['title'] = browser.find_by_css('h2.title').text
+            hemisphere_image_urls.append(hemisphere)
+            browser.back()
+
+    except AttributeError:
+        return None   
+
+    return hemisphere_image_urls
 
 if __name__ == "__main__":
 
